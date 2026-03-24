@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authApi, gamesApi } from '../utils/api';
 import type { Game } from '../types';
+import GameSearchSelect from '../components/GameSearchSelect';
 import './EditProfilePage.css';
+
+
+
 
 const PLATFORM_ICONS: Record<string, string> = {
     PC: '💻', PlayStation: '🎮', Xbox: '🟩', Switch: '🎴', Mobile: '📱'
@@ -38,6 +42,16 @@ const EditProfilePage: React.FC = () => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     useEffect(() => { gamesApi.getAll().then(setAvailableGames).catch(console.error); }, []);
+
+    // Añadir juego desde el buscador al perfil
+    const handleGameAdd = (_gameId: string, game: Game | null) => {
+        if (!game) return;
+        setFormData(prev => {
+            if (prev.juegos.includes(game.nombre)) return prev; // ya está
+            return { ...prev, juegos: [...prev.juegos, game.nombre] };
+        });
+    };
+
 
     useEffect(() => {
         if (!user) return;
@@ -104,6 +118,11 @@ const EditProfilePage: React.FC = () => {
     if (!user) return <div className="ep-loading"><div className="ep-spinner" /></div>;
 
     const avatarUrl = avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=6d28d9&color=fff&size=200`;
+
+    // Juegos a mostrar como chips: los seleccionados + hasta 10 sugerencias populares
+    const selectedGamesList = availableGames.filter(g => formData.juegos.includes(g.nombre));
+    const suggestedGames = availableGames.filter(g => !formData.juegos.includes(g.nombre)).slice(0, 10);
+    const displayedGames = [...selectedGamesList, ...suggestedGames];
 
     return (
         <div className="ep-page">
@@ -198,19 +217,43 @@ const EditProfilePage: React.FC = () => {
                     {/* Juegos */}
                     <div className="ep-card ep-card--wide">
                         <h2 className="ep-card-title">🎮 Juegos</h2>
+
+                        {/* Buscador local (filtra los 200+ juegos de la BD) */}
+                        <div style={{ marginBottom: '14px' }}>
+                            <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginBottom: '8px' }}>
+                                Busca y añade juegos a tu perfil:
+                            </p>
+                            <GameSearchSelect
+                                games={availableGames}
+                                value=""
+                                onChange={handleGameAdd}
+                                placeholder="Busca entre los 200+ juegos..."
+                            />
+                        </div>
+
+                        {/* Chips de juegos seleccionados y sugerencias */}
                         <div className="ep-chip-selector">
-                            {availableGames.map(game => (
+                            {displayedGames.map(game => (
                                 <button
                                     key={game.id}
                                     type="button"
                                     className={`ep-chip ${formData.juegos.includes(game.nombre) ? 'selected' : ''}`}
                                     onClick={() => toggleItem('juegos', game.nombre)}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                                 >
+                                    {game.foto_portada && (
+                                        <img
+                                            src={game.foto_portada}
+                                            alt={game.nombre}
+                                            style={{ width: '18px', height: '24px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
+                                        />
+                                    )}
                                     {game.nombre}
                                 </button>
                             ))}
                         </div>
                     </div>
+
 
                     {/* Plataformas */}
                     <div className="ep-card">

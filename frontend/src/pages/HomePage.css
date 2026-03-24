@@ -1,0 +1,124 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 40px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: radial-gradient(circle at center, rgba(124, 58, 237, 0.1) 0%, transparent 70%);
+}
+
+.home-page h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, white, var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.home-page > p {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    margin-bottom: 40px;
+    max-width: 600px;
+}
+
+.cta-button {
+    background: #8b5cf6;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-bottom: 60px;
+}
+
+.cta-button:hover {
+    background: #7c3aed;
+}
+
+/* ── Carousel ── */
+.home-carousel-section {
+    width: 100%;
+    margin-top: 40px;
+}
+
+.home-carousel-section h2 {
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.carousel-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    /* Hide scrollbar for cleaner look */
+    scrollbar-width: thin;
+    scrollbar-color: #4f46e5 #1e2133;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.carousel-container::-webkit-scrollbar-track {
+    background: #1e2133;
+    border-radius: 4px;
+}
+
+.carousel-container::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 4px;
+}
+
+.carousel-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: #1e2133;
+    border: 1px solid #2a2d3e;
+    border-radius: 12px;
+    min-width: 200px;
+    max-width: 200px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    transition: transform 0.2s ease, border-color 0.2s;
+}
+
+.carousel-card:hover {
+    transform: translateY(-5px);
+    border-color: #8b5cf6;
+}
+
+.carousel-card-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.carousel-card-info {
+    padding: 16px;
+    text-align: left;
+}
+
+.carousel-card-title {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.carousel-card-genre {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}

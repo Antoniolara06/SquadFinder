@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import PlayerCard, { type Player } from '../components/PlayerCard';
 import { playersApi, friendsApi, configApi } from '../utils/api';
 import type { AppConfig } from '../utils/api';
@@ -97,8 +98,11 @@ const PlayerSearchPage: React.FC = () => {
     const [sentRequests, setSentRequests] = useState<Set<number>>(new Set());
     const [friendsSet, setFriendsSet] = useState<Set<number>>(new Set());
     const [receivedRequests, setReceivedRequests] = useState<Set<number>>(new Set());
+    const [searchParams] = useSearchParams();
+    const initialGame = searchParams.get('game') || '';
+
     const [filters, setFilters] = useState({
-        game: '',
+        game: initialGame,
         micRequired: false,
         platform: '',
         horario: '',

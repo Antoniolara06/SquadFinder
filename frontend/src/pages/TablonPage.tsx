@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { anunciosApi, gamesApi, authApi } from '../utils/api';
 import type { Anuncio, Game } from '../types';
+import GameSearchSelect from '../components/GameSearchSelect';
 import './TablonPage.css';
+
+
 
 const formatHoraJuego = (iso: string) => {
     if (!iso) return 'Sin hora';
@@ -35,34 +38,10 @@ const TablonPage: React.FC = () => {
     const [submitting, setSubmitting] = useState(false);
     const [msg, setMsg] = useState('');
     const [deletingId, setDeletingId] = useState<number | null>(null);
-
     const [rangosDisponibles, setRangosDisponibles] = useState<string[]>([]);
     const [_loadingRangos, setLoadingRangos] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [anunciosData, gamesData] = await Promise.all([
-                    anunciosApi.getAll(),
-                    gamesApi.getAll()
-                ]);
-                setAnuncios(anunciosData);
-                setGames(gamesData);
-
-                try {
-                    const u = await authApi.getCurrentUser();
-                    setUser(u);
-                } catch { }
-            } catch (error) {
-                console.error("Error loading data", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    // Al cambiar de juego, resetear rango y cargar rangos desde la API
+    // Al cambiar juego → cargar sus rangos
     const handleGameChange = async (gameId: string) => {
         setNewAnuncio(prev => ({ ...prev, game_id: gameId, required_rank: '' }));
         if (!gameId) { setRangosDisponibles([]); return; }
@@ -76,6 +55,28 @@ const TablonPage: React.FC = () => {
             setLoadingRangos(false);
         }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [anunciosData, gamesData] = await Promise.all([
+                    anunciosApi.getAll(),
+                    gamesApi.getAll()
+                ]);
+                setAnuncios(anunciosData);
+                setGames(gamesData);
+                try {
+                    const u = await authApi.getCurrentUser();
+                    setUser(u);
+                } catch { }
+            } catch (error) {
+                console.error('Error loading data', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handlePublish = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -156,19 +157,16 @@ const TablonPage: React.FC = () => {
                     )}
                     <form onSubmit={handlePublish}>
                         <div className="form-group">
-                            <label>Juego</label>
-                            <select
+                            <label>🎮 Juego</label>
+                            <GameSearchSelect
+                                games={games}
                                 value={newAnuncio.game_id}
-                                onChange={(e) => handleGameChange(e.target.value)}
-                                required
                                 disabled={!user}
-                            >
-                                <option value="">Selecciona un juego</option>
-                                {games.map(g => (
-                                    <option key={g.id} value={g.id}>{g.nombre}</option>
-                                ))}
-                            </select>
+                                placeholder="Busca entre los 200+ juegos..."
+                                onChange={(gameId, _game) => handleGameChange(gameId)}
+                            />
                         </div>
+
 
                         {/* Rango: solo aparece si hay un juego seleccionado */}
                         {newAnuncio.game_id && rangosDisponibles.length > 0 && (
@@ -236,19 +234,17 @@ const TablonPage: React.FC = () => {
             <main className="tablon-board">
                 <header className="board-header">
                     <h1>Tablón de Anuncios</h1>
-                    <div className="board-filters">
-                        <span>Filtrar por:</span>
-                        <select
-                            value={filterGame}
-                            onChange={(e) => setFilterGame(e.target.value)}
-                            className="filter-game-select"
-                        >
-                            <option value="">Todos los juegos</option>
-                            {games.map(g => (
-                                <option key={g.id} value={g.nombre}>{g.nombre}</option>
-                            ))}
-                        </select>
+                    {/* ── Filtro de juegos mediante buscador ── */}
+                    <div className="board-filters" style={{ minWidth: '280px', maxWidth: '350px' }}>
+                        <span>Filtrar tablón por juego:</span>
+                        <GameSearchSelect
+                            games={games}
+                            value={games.find(g => g.nombre === filterGame)?.id.toString() || ''}
+                            onChange={(_gameId, game) => setFilterGame(game ? game.nombre : '')}
+                            placeholder="Buscar juego (Ej: Valorant)..."
+                        />
                     </div>
+
                 </header>
 
                 <div className="anuncios-grid">
@@ -264,9 +260,17 @@ const TablonPage: React.FC = () => {
                                     title={isClickable ? `Iniciar chat con ${anuncio.user?.username}` : undefined}
                                 >
                                     <div className="anuncio-header">
+                                        {anuncio.game?.foto_portada && (
+                                            <img
+                                                src={anuncio.game.foto_portada}
+                                                alt={anuncio.game.nombre}
+                                                className="anuncio-game-cover"
+                                            />
+                                        )}
                                         <span className="anuncio-game">{anuncio.game?.nombre || 'Juego'}</span>
                                         <span className="anuncio-time">🕒 {formatHoraJuego(anuncio.hora_juego || '')}</span>
                                     </div>
+
                                     <div className="anuncio-body">
                                         <h3 className="anuncio-title">{anuncio.title}</h3>
                                         <p className="anuncio-desc">{anuncio.description}</p>
