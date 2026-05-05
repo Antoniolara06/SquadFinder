@@ -11,6 +11,8 @@ export interface Player {
     reputation: number;
     tags: string[];
     idiomas?: string[];
+    pais?: string;
+    juegos?: string[];
     plataformas?: string[];
     usa_microfono?: boolean;
     horario_juego?: string[];
@@ -31,10 +33,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onAddFriend, friendStat
                 <div className="avatar-container">
                     <img src={player.avatar} alt={player.username} className="avatar-img" />
                 </div>
-                <div className="reputation-badge">
-                    <span className="rep-value">{player.reputation}%</span>
-                    <span className="rep-label">REPUTATION</span>
-                </div>
             </div>
 
             <div className="card-body">
@@ -44,8 +42,14 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onAddFriend, friendStat
                 </h3>
 
                 <div className="tags-container">
-                    {player.tags.map((tag, index) => (
-                        <span key={index} className="tag">{tag}</span>
+                    {player.idiomas && player.idiomas.length > 0 && (
+                        <span className="tag tag-idioma">{player.idiomas.join(", ")}</span>
+                    )}
+                    {player.pais && (
+                        <span className="tag tag-pais">{player.pais}</span>
+                    )}
+                    {player.juegos && player.juegos.map((game, index) => (
+                        <span key={index} className="tag tag-juego">{game}</span>
                     ))}
                 </div>
 

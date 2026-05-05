@@ -6,6 +6,7 @@
     min-height: 100vh;
     background: var(--bg-dark, #0d0f1a);
     color: #e2e8f0;
+    padding-top: 40px;
     padding-bottom: 60px;
 }
 
@@ -32,28 +33,6 @@
     }
 }
 
-/* ── Banner ── */
-.ep-banner {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-}
-
-.ep-banner-overlay {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 60% 50%, rgba(139, 92, 246, .35) 0%, transparent 70%);
-}
-
-.ep-banner-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(139, 92, 246, .08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 92, 246, .08) 1px, transparent 1px);
-    background-size: 40px 40px;
-}
 
 /* ── Hero ── */
 .ep-hero {
@@ -63,7 +42,6 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 24px;
-    transform: translateY(-48px);
     gap: 20px;
 }
 
@@ -214,7 +192,7 @@
     display: flex;
     gap: 16px;
     max-width: 1100px;
-    margin: -32px auto 28px;
+    margin: 32px auto 28px;
     padding: 0 24px;
     flex-wrap: wrap;
 }
@@ -437,7 +415,6 @@
     .ep-hero {
         flex-direction: column;
         align-items: flex-start;
-        transform: translateY(-40px);
     }
 
     .ep-hero-actions {
@@ -479,6 +456,108 @@
         width: 100%;
         text-align: center;
     }
+}
+
+/* ── Mis Anuncios Section ── */
+.ep-my-anuncios-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ep-anuncio-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0d0f1a;
+    border: 1px solid #2a2d3e;
+    border-radius: 10px;
+    padding: 12px 18px;
+    transition: border-color .2s;
+}
+
+.ep-anuncio-item:hover {
+    border-color: #8b5cf6;
+}
+
+.ep-anuncio-item-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ep-anuncio-game-tag {
+    font-size: .7rem;
+    font-weight: 700;
+    color: #8b5cf6;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.ep-anuncio-title {
+    font-size: .95rem;
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+.ep-anuncio-item-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ep-anuncio-date {
+    font-size: .8rem;
+    color: #64748b;
+}
+
+.ep-btn-delete-small {
+    background: rgba(239, 68, 68, .1);
+    border: 1px solid rgba(239, 68, 68, .3);
+    color: #f87171;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 1rem;
+}
+
+.ep-btn-delete-small:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    transform: scale(1.1);
+}
+
+.ep-empty-state {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+}
+
+.ep-btn-link {
+    background: none;
+    border: none;
+    color: #8b5cf6;
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .9rem;
+    margin-top: 8px;
+}
+
+.ep-btn-link:hover {
+    color: #a78bfa;
+}
+
+.ep-empty-text {
+    color: #64748b;
+    font-style: italic;
+    font-size: .9rem;
 }
 
 /* ── Footer Actions ── */

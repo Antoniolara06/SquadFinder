@@ -69,6 +69,119 @@
     border: 2px solid var(--primary);
 }
 
+/* Hamburguesa Button */
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.navbar-toggle:hover {
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.hamburger {
+    width: 24px;
+    height: 2px;
+    background: var(--text-main);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: var(--text-main);
+    left: 0;
+    transition: all 0.3s;
+}
+
+.hamburger::before { top: -8px; }
+.hamburger::after { bottom: -8px; }
+
+/* Transformar en X cuando está activo */
+.navbar-toggle.active .hamburger {
+    background: transparent;
+}
+
+.navbar-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.navbar-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .navbar {
+        padding: 0 1.5rem;
+    }
+
+    .navbar-toggle {
+        display: flex;
+    }
+
+    .navbar-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background: #161827;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        transition: right 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        z-index: 1000;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        padding: 2rem;
+    }
+
+    .navbar-links.open {
+        right: 0;
+    }
+
+    .navbar-links a {
+        font-size: 1.2rem;
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-radius: 12px;
+        transition: background 0.2s;
+    }
+
+    .navbar-links a:hover {
+        background: rgba(139, 92, 246, 0.1);
+    }
+
+    .navbar-links a.active::after {
+        display: none;
+    }
+
+    .navbar-user {
+        margin-right: 0;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
 .btn-logout {
     background-color: transparent;
     border: 1px solid var(--border-color);

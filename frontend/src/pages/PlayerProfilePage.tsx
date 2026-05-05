@@ -87,11 +87,8 @@ const PlayerProfilePage: React.FC = () => {
 
     return (
         <div className="pp-page">
-            {/* ── Banner ── */}
-            <div className="pp-banner">
-                <div className="pp-banner-overlay" />
-                <div className="pp-banner-grid" />
-                <button className="pp-btn-back-banner" onClick={() => navigate(-1)}>← Volver</button>
+            <div className="pp-top-actions">
+                <button className="pp-btn-back-simple" onClick={() => navigate(-1)}>← Volver</button>
             </div>
 
             {/* ── Hero ── */}

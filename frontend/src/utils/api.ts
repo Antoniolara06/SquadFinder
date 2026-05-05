@@ -48,6 +48,10 @@ export const anunciosApi = {
     },
     delete: async (id: number): Promise<void> => {
         await api.delete(`/anuncios/${id}`);
+    },
+    getMine: async (): Promise<Anuncio[]> => {
+        const { data } = await api.get('/me/anuncios');
+        return data;
     }
 };
 
@@ -130,6 +134,13 @@ export const chatApi = {
     },
     sendMessage: async (friendId: number, content: string): Promise<ChatMessage> => {
         const { data } = await api.post(`/chat/${friendId}`, { content });
+        return data;
+    }
+};
+
+export const suggestionsApi = {
+    create: async (contenido: string): Promise<any> => {
+        const { data } = await api.post('/sugerencias', { contenido });
         return data;
     }
 };

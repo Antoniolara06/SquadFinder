@@ -8,8 +8,6 @@ import TablonPage from './pages/TablonPage';
 import PlayerSearchPage from './pages/PlayerSearchPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import CreateAnuncioPage from './pages/CreateAnuncioPage';
-import Teclado from './pages/Teclado';
 import EditProfilePage from './pages/EditProfilePage';
 import FriendsPage from './pages/FriendsPage';
 import MessagesPage from './pages/MessagesPage';
@@ -30,8 +28,6 @@ function App() {
           <Route path="/players/:id" element={<PlayerProfilePage />} />
           {/* Rutas protegidas */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/create-anuncio" element={<CreateAnuncioPage />} />
-            <Route path="/teclado" element={<Teclado />} />
             <Route path="/edit-profile" element={<EditProfilePage />} />
             <Route path="/friends" element={<FriendsPage />} />
             <Route path="/messages" element={<MessagesPage />} />

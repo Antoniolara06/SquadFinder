@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { friendsApi } from '../utils/api';
 import type { FriendshipData } from '../utils/api';
 import type { User } from '../types';
-import InlineChat from '../components/InlineChat';
 import './FriendsPage.css';
 
 type TabType = 'friends' | 'received' | 'sent';
@@ -15,7 +14,6 @@ const FriendsPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<TabType>('friends');
     const [actionLoading, setActionLoading] = useState<number | null>(null);
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const fetchAll = useCallback(async () => {
         try {
@@ -90,14 +88,14 @@ const FriendsPage: React.FC = () => {
             <nav className="friends-tabs">
                 <button
                     className={`tab-btn ${activeTab === 'friends' ? 'active' : ''}`}
-                    onClick={() => { setActiveTab('friends'); setSelectedUser(null); }}
+                    onClick={() => setActiveTab('friends')}
                 >
                     🎮 Amigos
                     <span className="tab-count">{friendsCount}</span>
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'received' ? 'active' : ''}`}
-                    onClick={() => { setActiveTab('received'); setSelectedUser(null); }}
+                    onClick={() => setActiveTab('received')}
                 >
                     📨 Recibidas
                     {receivedCount > 0 && (
@@ -106,7 +104,7 @@ const FriendsPage: React.FC = () => {
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'sent' ? 'active' : ''}`}
-                    onClick={() => { setActiveTab('sent'); setSelectedUser(null); }}
+                    onClick={() => setActiveTab('sent')}
                 >
                     📤 Enviadas
                     <span className="tab-count">{sentCount}</span>
@@ -130,60 +128,46 @@ const FriendsPage: React.FC = () => {
                     <>
                         {/* --- TAB: AMIGOS --- */}
                         {activeTab === 'friends' && (
-                            <div className="friends-layout">
-                                {/* Lista de amigos con click → perfil */}
-                                <div className="friends-list-column">
-                                    {friendsCount === 0 ? (
-                                        <div className="empty-state">
-                                            <span className="empty-icon">🎮</span>
-                                            <h3>Aún no tienes amigos</h3>
-                                            <p>Busca jugadores y envía solicitudes de amistad para empezar.</p>
-                                        </div>
-                                    ) : (
-                                        data!.friends.map((friend: User) => {
-                                            const isSelected = selectedUser?.id === friend.id;
-                                            return (
-                                                <div
-                                                    key={friend.id}
-                                                    className={`friend-row ${isSelected ? 'friend-row--selected' : ''}`}
-                                                    onClick={() => setSelectedUser(friend)}
+                            <div className="friends-grid">
+                                {friendsCount === 0 ? (
+                                    <div className="empty-state">
+                                        <span className="empty-icon">🎮</span>
+                                        <h3>Aún no tienes amigos</h3>
+                                        <p>Busca jugadores y envía solicitudes de amistad para empezar.</p>
+                                    </div>
+                                ) : (
+                                    data!.friends.map((friend: User) => (
+                                        <div key={friend.id} className="friend-card" onClick={() => navigate(`/players/${friend.id}`)} style={{ cursor: 'pointer' }}>
+                                            <div className="friend-avatar-wrap">
+                                                <img
+                                                    src={friend.avatar_url || `https://ui-avatars.com/api/?name=${friend.username}&background=random`}
+                                                    alt={friend.username}
+                                                    className="friend-avatar"
+                                                />
+                                            </div>
+                                            <div className="friend-info" style={{ flex: 1 }}>
+                                                <h3 className="friend-name" style={{ margin: '0 0 4px', fontSize: '1.1rem' }}>{friend.username}</h3>
+                                                <span className="badge-friend">Amigo</span>
+                                            </div>
+                                            <div className="friend-actions">
+                                                <button
+                                                    className="btn-message"
+                                                    onClick={(e) => { e.stopPropagation(); navigate(`/messages`); }}
+                                                    title="Chatear"
                                                 >
-                                                    <div className="friend-avatar-wrap">
-                                                        <img
-                                                            src={friend.avatar_url || `https://ui-avatars.com/api/?name=${friend.username}&background=random`}
-                                                            alt={friend.username}
-                                                            className="friend-avatar"
-                                                        />
-                                                    </div>
-                                                    <div className="friend-info">
-                                                        <h3 className="friend-name">{friend.username}</h3>
-                                                        <span className="badge-friend">Amigo</span>
-                                                    </div>
-                                                    <button
-                                                        className="btn-view-profile"
-                                                        onClick={(e) => { e.stopPropagation(); navigate(`/players/${friend.id}`); }}
-                                                        title="Ver perfil"
-                                                    >
-                                                        👤
-                                                    </button>
-                                                </div>
-                                            );
-                                        })
-                                    )}
-                                </div>
-
-                                {/* Columna derecha: chat inline */}
-                                <div className="friend-detail-column">
-                                    {selectedUser ? (
-                                        <InlineChat key={selectedUser.id} friend={selectedUser} />
-                                    ) : (
-                                        <div className="friend-detail-placeholder">
-                                            <span className="placeholder-icon">💬</span>
-                                            <p>Selecciona un amigo para chatear</p>
-                                            <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>O pincha en 👤 para ver su perfil</p>
+                                                    💬
+                                                </button>
+                                                <button
+                                                    className="btn-view-profile"
+                                                    onClick={(e) => { e.stopPropagation(); navigate(`/players/${friend.id}`); }}
+                                                    title="Ver perfil"
+                                                >
+                                                    👤
+                                                </button>
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
+                                    ))
+                                )}
                             </div>
                         )}
 

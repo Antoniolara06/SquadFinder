@@ -248,7 +248,6 @@ const ChatPage: React.FC = () => {
                         {sending ? '⏳' : '➤'}
                     </button>
                 </div>
-                <p className="chat-hint">Pulsa <kbd>Enter</kbd> para enviar · <kbd>Shift+Enter</kbd> para nueva línea</p>
             </footer>
         </div>
     );

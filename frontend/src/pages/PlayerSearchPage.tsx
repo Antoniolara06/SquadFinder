@@ -4,6 +4,7 @@ import PlayerCard, { type Player } from '../components/PlayerCard';
 import { playersApi, friendsApi, configApi } from '../utils/api';
 import type { AppConfig } from '../utils/api';
 import type { User } from '../types';
+import { useAuth } from '../hooks/useAuth';
 import './PlayerSearchPage.css';
 
 const mapUserToPlayer = (user: User): Player => {
@@ -82,6 +83,8 @@ const mapUserToPlayer = (user: User): Player => {
         reputation: 50,
         tags: tags.length > 0 ? tags : ["Unknown"],
         idiomas: parsedIdiomas,
+        pais: user.pais,
+        juegos: parsedJuegos,
         plataformas: parsedPlataformas,
         usa_microfono: (user as any).usa_microfono ?? false,
         horario_juego: parsedHorario,
@@ -91,6 +94,7 @@ const mapUserToPlayer = (user: User): Player => {
 };
 
 const PlayerSearchPage: React.FC = () => {
+    const { user } = useAuth();
     const [players, setPlayers] = useState<Player[]>([]);
     const [config, setConfig] = useState<AppConfig | null>(null);
     const [loading, setLoading] = useState(true);
@@ -134,6 +138,9 @@ const PlayerSearchPage: React.FC = () => {
     }, []);
 
     const filteredPlayers = players.filter(player => {
+        // Ocultar al usuario actual
+        if (user && player.id === user.id) return false;
+
         // Filtrar por Juego: comparación exacta con el nombre del juego
         if (filters.game && !player.tags.includes(filters.game)) return false;
 

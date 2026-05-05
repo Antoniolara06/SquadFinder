@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Game } from '../types';
+import { getGameImageUrl } from '../utils/imageUtils';
 import './GameSearchSelect.css';
 
 interface Props {
@@ -61,7 +62,7 @@ const GameSearchSelect: React.FC<Props> = ({
       {selectedGame ? (
         <div className="gss-selected" onClick={() => !disabled && setOpen(o => !o)}>
           {selectedGame.foto_portada && (
-            <img src={selectedGame.foto_portada} alt={selectedGame.nombre} className="gss-sel-cover" />
+            <img src={getGameImageUrl(selectedGame.foto_portada)!} alt={selectedGame.nombre} className="gss-sel-cover" />
           )}
           <div className="gss-sel-info">
             <span className="gss-sel-name">{selectedGame.nombre}</span>
@@ -114,7 +115,7 @@ const GameSearchSelect: React.FC<Props> = ({
                 >
                   <div className="gss-item-cover">
                     {game.foto_portada
-                      ? <img src={game.foto_portada} alt={game.nombre} />
+                      ? <img src={getGameImageUrl(game.foto_portada)!} alt={game.nombre} />
                       : <span>🎮</span>
                     }
                   </div>

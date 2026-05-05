@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { authApi, gamesApi } from '../utils/api';
-import type { Game } from '../types';
+import { authApi, gamesApi, anunciosApi } from '../utils/api';
+import type { Game, Anuncio } from '../types';
 import GameSearchSelect from '../components/GameSearchSelect';
+import { getGameImageUrl } from '../utils/imageUtils';
 import './EditProfilePage.css';
 
 
@@ -39,9 +40,14 @@ const EditProfilePage: React.FC = () => {
     const [avatarPreview, setAvatarPreview] = useState<string>('');
     const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
     const [availableGames, setAvailableGames] = useState<Game[]>([]);
+    const [myAnuncios, setMyAnuncios] = useState<Anuncio[]>([]);
+    const [loadingAnuncios, setLoadingAnuncios] = useState(true);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-    useEffect(() => { gamesApi.getAll().then(setAvailableGames).catch(console.error); }, []);
+    useEffect(() => { 
+        gamesApi.getAll().then(setAvailableGames).catch(console.error); 
+        anunciosApi.getMine().then(setMyAnuncios).catch(console.error).finally(() => setLoadingAnuncios(false));
+    }, []);
 
     // Añadir juego desde el buscador al perfil
     const handleGameAdd = (_gameId: string, game: Game | null) => {
@@ -126,12 +132,6 @@ const EditProfilePage: React.FC = () => {
 
     return (
         <div className="ep-page">
-
-            {/* ── Banner ── */}
-            <div className="ep-banner">
-                <div className="ep-banner-overlay" />
-                <div className="ep-banner-grid" />
-            </div>
 
             {/* ── Hero / Avatar ── */}
             <form onSubmit={handleSubmit}>
@@ -221,13 +221,13 @@ const EditProfilePage: React.FC = () => {
                         {/* Buscador local (filtra los 200+ juegos de la BD) */}
                         <div style={{ marginBottom: '14px' }}>
                             <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginBottom: '8px' }}>
-                                Busca y añade juegos a tu perfil:
+                                Busca y añade juegos a tu perfil (filtra los {availableGames.length} juegos de la BD):
                             </p>
                             <GameSearchSelect
                                 games={availableGames}
                                 value=""
                                 onChange={handleGameAdd}
-                                placeholder="Busca entre los 200+ juegos..."
+                                placeholder={`Busca entre los ${availableGames.length} juegos...`}
                             />
                         </div>
 
@@ -243,7 +243,7 @@ const EditProfilePage: React.FC = () => {
                                 >
                                     {game.foto_portada && (
                                         <img
-                                            src={game.foto_portada}
+                                            src={getGameImageUrl(game.foto_portada)!}
                                             alt={game.nombre}
                                             style={{ width: '18px', height: '24px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
                                         />
@@ -304,6 +304,50 @@ const EditProfilePage: React.FC = () => {
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    {/* Mis Anuncios */}
+                    <div className="ep-card ep-card--wide">
+                        <h2 className="ep-card-title">📢 Mis Anuncios Publicados</h2>
+                        {loadingAnuncios ? (
+                            <p className="ep-empty-text">Cargando tus anuncios...</p>
+                        ) : myAnuncios.length > 0 ? (
+                            <div className="ep-my-anuncios-list">
+                                {myAnuncios.map(anuncio => (
+                                    <div key={anuncio.id} className="ep-anuncio-item">
+                                        <div className="ep-anuncio-item-left">
+                                            <span className="ep-anuncio-game-tag">{anuncio.game?.nombre}</span>
+                                            <span className="ep-anuncio-title">{anuncio.title}</span>
+                                        </div>
+                                        <div className="ep-anuncio-item-right">
+                                            <span className="ep-anuncio-date">{new Date(anuncio.created_at).toLocaleDateString()}</span>
+                                            <button 
+                                                type="button"
+                                                className="ep-btn-delete-small"
+                                                onClick={async () => {
+                                                    if(window.confirm('¿Eliminar este anuncio?')) {
+                                                        try {
+                                                            await anunciosApi.delete(anuncio.id);
+                                                            setMyAnuncios(prev => prev.filter(a => a.id !== anuncio.id));
+                                                        } catch(e) {
+                                                            alert('Error al eliminar');
+                                                        }
+                                                    }
+                                                }}
+                                                title="Eliminar anuncio"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="ep-empty-state">
+                                <p>No has publicado ningún anuncio todavía.</p>
+                                <button type="button" onClick={() => navigate('/tablon')} className="ep-btn-link">Ir al tablón para publicar uno</button>
+                            </div>
+                        )}
                     </div>
 
                 </div>

@@ -5,20 +5,29 @@ import './Navbar.css';
 
 const Navbar: React.FC = () => {
     const { user } = useAuth();
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const toggleMenu = () => setIsOpen(!isOpen);
+    const closeMenu = () => setIsOpen(false);
 
     return (
         <nav className="navbar">
             <div className="navbar-logo">
-                <NavLink to="/">SquadFinder</NavLink>
+                <NavLink to="/" onClick={closeMenu}>SquadFinder</NavLink>
             </div>
-            <div className="navbar-links">
-                <NavLink to="/tablon">Tablón de anuncios</NavLink>
-                <NavLink to="/players">Buscar Jugador</NavLink>
+
+            <button className={`navbar-toggle ${isOpen ? 'active' : ''}`} onClick={toggleMenu} aria-label="Abrir menú">
+                <span className="hamburger"></span>
+            </button>
+
+            <div className={`navbar-links ${isOpen ? 'open' : ''}`}>
+                <NavLink to="/tablon" onClick={closeMenu}>Tablón de anuncios</NavLink>
+                <NavLink to="/players" onClick={closeMenu}>Buscar Jugador</NavLink>
                 {user ? (
                     <>
-                        <NavLink to="/friends">Amigos</NavLink>
-                        <NavLink to="/messages">Mensajes</NavLink>
-                        <NavLink to="/edit-profile" className="navbar-user">
+                        <NavLink to="/friends" onClick={closeMenu}>Amigos</NavLink>
+                        <NavLink to="/messages" onClick={closeMenu}>Mensajes</NavLink>
+                        <NavLink to="/edit-profile" className="navbar-user" onClick={closeMenu}>
                             {user.avatar_url && (
                                 <img src={user.avatar_url} alt="User Avatar" className="navbar-avatar" />
                             )}
@@ -26,7 +35,7 @@ const Navbar: React.FC = () => {
                         </NavLink>
                     </>
                 ) : (
-                    <NavLink to="/login">Login</NavLink>
+                    <NavLink to="/login" onClick={closeMenu}>Login</NavLink>
                 )}
             </div>
         </nav>

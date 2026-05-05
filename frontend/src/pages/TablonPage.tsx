@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { anunciosApi, gamesApi, authApi } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
+import { anunciosApi, gamesApi, suggestionsApi } from '../utils/api';
 import type { Anuncio, Game } from '../types';
 import GameSearchSelect from '../components/GameSearchSelect';
+import { getGameImageUrl } from '../utils/imageUtils';
 import './TablonPage.css';
 
 
@@ -21,11 +23,11 @@ const formatHoraJuego = (iso: string) => {
 
 const TablonPage: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
     const [filterGame, setFilterGame] = useState<string>('');
-    const [user, setUser] = useState<any>(null);
 
     // Form state
     const [newAnuncio, setNewAnuncio] = useState({
@@ -40,6 +42,10 @@ const TablonPage: React.FC = () => {
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [rangosDisponibles, setRangosDisponibles] = useState<string[]>([]);
     const [_loadingRangos, setLoadingRangos] = useState(false);
+    
+    // Sugerencia de juego
+    const [sugerencia, setSugerencia] = useState('');
+    const [sugerenciaStatus, setSugerenciaStatus] = useState('');
 
     // Al cambiar juego → cargar sus rangos
     const handleGameChange = async (gameId: string) => {
@@ -65,10 +71,6 @@ const TablonPage: React.FC = () => {
                 ]);
                 setAnuncios(anunciosData);
                 setGames(gamesData);
-                try {
-                    const u = await authApi.getCurrentUser();
-                    setUser(u);
-                } catch { }
             } catch (error) {
                 console.error('Error loading data', error);
             } finally {
@@ -138,6 +140,24 @@ const TablonPage: React.FC = () => {
         navigate(`/chat/user/${anuncio.user_id}`);
     };
 
+    const handleSugerenciaSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user) {
+            setSugerenciaStatus('Inicia sesión para sugerir un juego.');
+            return;
+        }
+        if (!sugerencia.trim()) return;
+
+        try {
+            await suggestionsApi.create(sugerencia);
+            setSugerencia('');
+            setSugerenciaStatus('¡Sugerencia enviada! Revisaremos tu juego pronto.');
+            setTimeout(() => setSugerenciaStatus(''), 5000);
+        } catch {
+            setSugerenciaStatus('Error al enviar sugerencia.');
+        }
+    };
+
     const filteredAnuncios = filterGame
         ? anuncios.filter(s => s.game?.nombre === filterGame)
         : anuncios;
@@ -162,7 +182,7 @@ const TablonPage: React.FC = () => {
                                 games={games}
                                 value={newAnuncio.game_id}
                                 disabled={!user}
-                                placeholder="Busca entre los 200+ juegos..."
+                                placeholder={`Busca entre los ${games.length} juegos...`}
                                 onChange={(gameId, _game) => handleGameChange(gameId)}
                             />
                         </div>
@@ -262,7 +282,7 @@ const TablonPage: React.FC = () => {
                                     <div className="anuncio-header">
                                         {anuncio.game?.foto_portada && (
                                             <img
-                                                src={anuncio.game.foto_portada}
+                                                src={getGameImageUrl(anuncio.game.foto_portada)!}
                                                 alt={anuncio.game.nombre}
                                                 className="anuncio-game-cover"
                                             />
@@ -314,6 +334,29 @@ const TablonPage: React.FC = () => {
                             <p>No hay anuncios disponibles en esta categoría.</p>
                         </div>
                     )}
+                </div>
+
+                {/* ── Seccion Sugerencia ── */}
+                <div className="tablon-suggestion-section">
+                    <div className="suggestion-card">
+                        <h3>¿Falta algún juego?</h3>
+                        <p>Dinos qué juego echas de menos y lo añadiremos pronto.</p>
+                        <form onSubmit={handleSugerenciaSubmit} className="suggestion-form">
+                            <input 
+                                type="text" 
+                                placeholder="Escribe el nombre del juego..."
+                                value={sugerencia}
+                                onChange={(e) => setSugerencia(e.target.value)}
+                                disabled={!user}
+                            />
+                            <button type="submit" disabled={!user || !sugerencia.trim()}>Enviar</button>
+                        </form>
+                        {sugerenciaStatus && (
+                            <p className={`suggestion-msg ${sugerenciaStatus.includes('Error') || sugerenciaStatus.includes('Inicia') ? 'error' : 'success'}`}>
+                                {sugerenciaStatus}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </main>
         </div>

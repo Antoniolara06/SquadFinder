@@ -8,6 +8,8 @@
     background-color: var(--bg-dark);
 }
 
+/* Responsividad */
+
 .section-title {
     color: var(--primary);
     font-size: 0.9rem;
@@ -217,9 +219,29 @@
 .tag {
     background-color: rgba(255, 255, 255, 0.05);
     font-size: 0.75rem;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
     color: var(--text-secondary);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.tag-idioma {
+    background-color: rgba(45, 212, 191, 0.1);
+    color: #2dd4bf; 
+    border-color: rgba(45, 212, 191, 0.2);
+}
+
+.tag-pais {
+    background-color: rgba(251, 191, 36, 0.1);
+    color: #fbbf24; 
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+.tag-juego {
+    background-color: rgba(124, 58, 237, 0.1);
+    color: #c4b5fd; 
+    border-color: rgba(124, 58, 237, 0.2);
 }
 
 .card-actions {
@@ -334,4 +356,32 @@
 .btn-view-all:hover {
     border-color: var(--primary);
     color: var(--primary);
+}
+@media (max-width: 1024px) {
+    .player-search-layout {
+        grid-template-columns: 240px 1fr;
+    }
+}
+
+@media (max-width: 850px) {
+    .player-search-layout {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+
+    .filters-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding-right: 0;
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .players-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
 }
