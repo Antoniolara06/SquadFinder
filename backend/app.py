@@ -23,6 +23,7 @@ class CookiePolicyMiddleware:
                     if 'Secure' not in value:
                         value += '; Secure'
                 new_headers.append((name, value))
+            new_headers.append(('X-Squadfinder-Version', '2.0'))
             return start_response(status, new_headers, exc_info)
         return self.app(environ, custom_start_response)
 
