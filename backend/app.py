@@ -180,7 +180,7 @@ def get_current_user():
 @login_required
 def update_profile():
     # Detectar si es multipart/form-data o JSON
-    if request.content_type.startswith('multipart/form-data'):
+    if request.content_type and request.content_type.startswith('multipart/form-data'):
         data = request.form
         file = request.files.get('avatar_file')
     else:
@@ -260,8 +260,8 @@ def update_profile():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
             # Guardamos la URL completa para que el frontend no tenga problemas
-            # Asumimos que el backend corre en localhost:5000 por defecto
-            user.avatar_url = f"http://localhost:5000/static/uploads/{filename}"
+            # Usamos request.host_url para que funcione dinámicamente en Render
+            user.avatar_url = f"{request.host_url}static/uploads/{filename}"
 
         db.session.commit()
         return jsonify(user.to_dict()), 200

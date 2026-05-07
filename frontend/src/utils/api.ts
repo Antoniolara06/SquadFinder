@@ -27,7 +27,7 @@ export const authApi = {
         return data;
     },
     updateProfile: async (userData: Partial<User> | FormData): Promise<User> => {
-        const config = userData instanceof FormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+        const config = userData instanceof FormData ? { headers: { 'Content-Type': undefined } } : {};
         const { data } = await api.put('/me/update', userData, config);
         return data;
     }
