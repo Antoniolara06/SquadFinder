@@ -166,6 +166,22 @@ def logout():
     logout_user()
     return jsonify({'message': 'Sesión cerrada'}), 200
 
+@app.after_request
+def apply_caching(response):
+    # Forzar que la cookie de sesión tenga SameSite=None y Secure=True
+    # ya que a veces la configuración de Flask falla detrás de un proxy
+    cookies = response.headers.getlist('Set-Cookie')
+    if cookies:
+        response.headers.remove('Set-Cookie')
+        for cookie in cookies:
+            if 'session=' in cookie:
+                if 'SameSite=None' not in cookie:
+                    cookie += '; SameSite=None'
+                if 'Secure' not in cookie:
+                    cookie += '; Secure'
+            response.headers.add('Set-Cookie', cookie)
+    return response
+
 # Configuración de uploads
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
