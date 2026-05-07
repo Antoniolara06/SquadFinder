@@ -29,11 +29,13 @@ class CookiePolicyMiddleware:
 
 app.wsgi_app = CookiePolicyMiddleware(app.wsgi_app)
 
-# Configuración de CORS - permite cualquier subdominio de vercel.app + localhost
+# Configuración de CORS - permite el dominio exacto de Vercel + localhost
 CORS(app, supports_credentials=True, origins=[
-    r"http://localhost:.*",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://squad-finder-nine.vercel.app",
     r"https://.*\.vercel\.app",
-], allow_headers=["Content-Type"], methods=["GET","POST","PUT","DELETE","OPTIONS"])
+], allow_headers=["Content-Type", "Authorization"], methods=["GET","POST","PUT","DELETE","OPTIONS"])
 
 # Configuración de LoginManager
 login_manager = LoginManager(app)
