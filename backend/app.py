@@ -10,6 +10,11 @@ import time
 from dotenv import load_dotenv
 load_dotenv()
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+# Confiar en los headers del proxy de Render (HTTPS)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 # Configuración de CORS
 CORS(app, supports_credentials=True, origins=["http://localhost:5173", "https://squadfinder-nine.vercel.app"])
 
