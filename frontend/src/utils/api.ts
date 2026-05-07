@@ -3,7 +3,7 @@ import type { User, Anuncio, Game } from '../types';
 
 // Instance to connect to backend
 export const api = axios.create({
-    baseURL: 'http://localhost:5000', // Asumido por app.py
+    baseURL: import.meta.env.VITE_API_URL || 'https://squadfinder-api.onrender.com',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
