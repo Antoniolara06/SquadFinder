@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuración de CORS
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173", "https://squadfinder-nine.vercel.app"])
 
 # Configuración de LoginManager
 login_manager = LoginManager(app)
