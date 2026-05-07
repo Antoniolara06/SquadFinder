@@ -1,0 +1,16 @@
+# Ignorar el entorno virtual de Python
+Include/
+Lib/
+Scripts/
+__pycache__/
+pyvenv.cfg
+*.pyc
+
+# Ignorar variables de entorno
+.env
+
+# Uploads y archivos estáticos generados
+static/uploads/
+
+# Otros comunes
+.DS_Store
