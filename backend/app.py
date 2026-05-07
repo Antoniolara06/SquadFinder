@@ -10,10 +10,11 @@ import time
 from dotenv import load_dotenv
 load_dotenv()
 
-from werkzeug.middleware.proxy_fix import ProxyFix
-
-# Confiar en los headers del proxy de Render (HTTPS)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+# Forzar HTTPS para que Werkzeug añada SameSite=None y Secure=True a las cookies
+# saltándonos las restricciones del proxy de Gunicorn/Render
+@app.before_request
+def force_https():
+    request.environ['wsgi.url_scheme'] = 'https'
 
 # Configuración de CORS
 CORS(app, supports_credentials=True, origins=["http://localhost:5173", "https://squadfinder-nine.vercel.app"])
@@ -166,21 +167,7 @@ def logout():
     logout_user()
     return jsonify({'message': 'Sesión cerrada'}), 200
 
-@app.after_request
-def apply_caching(response):
-    # Forzar que la cookie de sesión tenga SameSite=None y Secure=True
-    # ya que a veces la configuración de Flask falla detrás de un proxy
-    cookies = response.headers.getlist('Set-Cookie')
-    if cookies:
-        response.headers.remove('Set-Cookie')
-        for cookie in cookies:
-            if 'session=' in cookie:
-                if 'SameSite=None' not in cookie:
-                    cookie += '; SameSite=None'
-                if 'Secure' not in cookie:
-                    cookie += '; Secure'
-            response.headers.add('Set-Cookie', cookie)
-    return response
+
 
 # Configuración de uploads
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
