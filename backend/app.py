@@ -9,12 +9,24 @@ import os
 import time
 from dotenv import load_dotenv
 load_dotenv()
+class CookiePolicyMiddleware:
+    def __init__(self, app):
+        self.app = app
 
-# Forzar HTTPS para que Werkzeug añada SameSite=None y Secure=True a las cookies
-# saltándonos las restricciones del proxy de Gunicorn/Render
-@app.before_request
-def force_https():
-    request.environ['wsgi.url_scheme'] = 'https'
+    def __call__(self, environ, start_response):
+        def custom_start_response(status, headers, exc_info=None):
+            new_headers = []
+            for name, value in headers:
+                if name.lower() == 'set-cookie' and 'session=' in value:
+                    if 'SameSite=None' not in value:
+                        value += '; SameSite=None'
+                    if 'Secure' not in value:
+                        value += '; Secure'
+                new_headers.append((name, value))
+            return start_response(status, new_headers, exc_info)
+        return self.app(environ, custom_start_response)
+
+app.wsgi_app = CookiePolicyMiddleware(app.wsgi_app)
 
 # Configuración de CORS
 CORS(app, supports_credentials=True, origins=["http://localhost:5173", "https://squadfinder-nine.vercel.app"])
