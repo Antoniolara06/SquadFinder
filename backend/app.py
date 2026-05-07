@@ -27,24 +27,24 @@ def cargar_datos_iniciales():
         JUEGOS_Y_RANGOS = [
             {
                 'juego': Juego(nombre='League of Legends', slug='league-of-legends', genero='MOBA',
-                    foto_portada='https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg'),
+                    foto_portada='/static/covers/league-of-legends.jpg'),
                 'rangos': ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Esmeralda', 'Diamante', 'Master', 'Gran Master', 'Campeón']
             },
             {
                 'juego': Juego(nombre='Valorant', slug='valorant', genero='Shooter',
-                    foto_portada='https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/e67e4776104ca84a224a1b025f05470E0a5e55e5-1920x1080.jpg'),
+                    foto_portada='/static/covers/valorant.jpg'),
                 'rangos': ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal', 'Radiante']
             },
             {
                 'juego': Juego(nombre='Counter-Strike 2', slug='cs2', genero='Shooter',
-                    foto_portada='https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg'),
+                    foto_portada='/static/covers/cs2.jpg'),
                 'rangos': ['Plata I', 'Plata II', 'Plata III', 'Plata IV', 'Plata Élite', 'Plata Élite Master',
                            'Nova I', 'Nova II', 'Nova III', 'Nova Master',
                            'MG1', 'MG2', 'MGE', 'DMG', 'Águila Legendaria', 'Águila Suprema', 'Águila Suprema Master', 'Global Élite']
             },
             {
                 'juego': Juego(nombre='Rocket League', slug='rocket-league', genero='Sports',
-                    foto_portada='https://cdn.akamai.steamstatic.com/steam/apps/252950/header.jpg'),
+                    foto_portada='/static/covers/rocket-league.jpg'),
                 'rangos': ['Bronce I', 'Bronce II', 'Bronce III',
                            'Plata I', 'Plata II', 'Plata III',
                            'Oro I', 'Oro II', 'Oro III',
@@ -56,7 +56,7 @@ def cargar_datos_iniciales():
             },
             {
                 'juego': Juego(nombre='Fortnite', slug='fortnite', genero='Battle Royale',
-                    foto_portada='https://cdn2.unrealengine.com/fortnite-chapter-4-season-battle-royale-1920x1080-77b2538bc803.jpg'),
+                    foto_portada='/static/covers/fortnite.jpg'),
                 'rangos': ['Bronce I', 'Bronce II', 'Bronce III',
                            'Plata I', 'Plata II', 'Plata III',
                            'Oro I', 'Oro II', 'Oro III',
@@ -66,7 +66,7 @@ def cargar_datos_iniciales():
             },
             {
                 'juego': Juego(nombre='Rainbow Six Siege', slug='r6-siege', genero='Shooter',
-                    foto_portada='https://cdn.akamai.steamstatic.com/steam/apps/359550/header.jpg'),
+                    foto_portada='/static/covers/r6-siege.jpg'),
                 'rangos': ['Cobre V', 'Cobre IV', 'Cobre III', 'Cobre II', 'Cobre I',
                            'Bronce V', 'Bronce IV', 'Bronce III', 'Bronce II', 'Bronce I',
                            'Plata V', 'Plata IV', 'Plata III', 'Plata II', 'Plata I',
@@ -76,12 +76,12 @@ def cargar_datos_iniciales():
             },
             {
                 'juego': Juego(nombre='Overwatch 2', slug='overwatch-2', genero='Shooter',
-                    foto_portada='https://blz-contentstack-cdn.akamaized.net/v3/assets/bltbc397a6065351161/blt0ed92bce6e6a1a0a/636a7fd67ff0f54d390e5574/OW2_GamePage_Banner_2560x1440.jpg'),
+                    foto_portada='/static/covers/overwatch-2.jpg'),
                 'rangos': ['Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Master', 'Gran Master', 'TOP 500']
             },
             {
                 'juego': Juego(nombre='Marvel Rivals', slug='marvel-rivals', genero='Shooter',
-                    foto_portada='https://cdn.marvelrivals.com/images/banner.jpg'),
+                    foto_portada='/static/covers/marvel-rivals.jpg'),
                 'rangos': ['Bronce III', 'Bronce II', 'Bronce I',
                            'Plata III', 'Plata II', 'Plata I',
                            'Oro III', 'Oro II', 'Oro I',
