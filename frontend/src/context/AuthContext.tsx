@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, type ReactNode, useContext } from 'react';
 import type { User } from '../types';
-import { authApi } from '../utils/api';
+import { authApi, tokenStorage } from '../utils/api';
 
 interface AuthContextType {
     user: User | null;
@@ -8,6 +8,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (userData: any) => Promise<void>;
+    updateUser: (userData: Partial<User>) => void;
     isAuthenticated: boolean;
 }
 
@@ -19,12 +20,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         const checkAuth = async () => {
+            // Solo intentamos recuperar la sesión si existe un token guardado
+            const token = tokenStorage.get();
+            if (!token) {
+                setLoading(false);
+                return;
+            }
             try {
-                const user = await authApi.getCurrentUser();
-                setUser(user);
-            } catch (error) {
-                // No session
-                console.log("No active session found");
+                const currentUser = await authApi.getCurrentUser();
+                setUser(currentUser);
+            } catch {
+                // Token inválido o expirado → lo borramos
+                tokenStorage.remove();
             } finally {
                 setLoading(false);
             }
@@ -33,18 +40,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     const login = async (email: string, password: string) => {
-        const user = await authApi.login(email, password);
-        setUser(user);
+        const userData = await authApi.login(email, password);
+        setUser(userData);
     };
 
     const logout = () => {
+        authApi.logout(); // borra el token de localStorage
         setUser(null);
-        // Lógica adicional para limpiar token/cookies si fuera necesario
     };
 
     const register = async (userData: any) => {
         await authApi.register(userData);
-        // Despues del registro, el usuario deberá hacer login manualmente
+    };
+
+    const updateUser = (updatedData: Partial<User>) => {
+        if (user) {
+            setUser({ ...user, ...updatedData });
+        }
     };
 
     return (
@@ -54,6 +66,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             login,
             logout,
             register,
+            updateUser,
             isAuthenticated: !!user
         }}>
             {children}
