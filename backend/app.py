@@ -1,3 +1,4 @@
+import re
 from flask import request, jsonify
 from flask_cors import CORS
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -34,8 +35,8 @@ CORS(app, supports_credentials=True, origins=[
     "http://localhost:5173",
     "http://localhost:3000",
     "https://squad-finder-nine.vercel.app",
-    r"https://.*\.vercel\.app",
-], allow_headers=["Content-Type", "Authorization"], methods=["GET","POST","PUT","DELETE","OPTIONS"])
+    re.compile(r"https://.*\.vercel\.app"),
+], allow_headers=["Content-Type", "Authorization", "X-Requested-With"], methods=["GET","POST","PUT","DELETE","OPTIONS"])
 
 # Configuración de LoginManager
 login_manager = LoginManager(app)
