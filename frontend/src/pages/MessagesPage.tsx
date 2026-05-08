@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { chatApi } from '../utils/api';
 import type { User } from '../types';
 import InlineChat from '../components/InlineChat';
@@ -15,10 +16,13 @@ interface Conversation {
 }
 
 const MessagesPage: React.FC = () => {
+    const location = useLocation();
+    const openFriend: User | undefined = (location.state as any)?.openFriend;
+
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(openFriend ?? null);
 
     const fetchConversations = useCallback(async () => {
         try {
@@ -26,9 +30,9 @@ const MessagesPage: React.FC = () => {
             setError(null);
             const convs = await chatApi.getConversations();
             setConversations(convs);
-            // Autoselección del primer chat si no hay ninguno seleccionado
-            if (!selectedUser && convs.length > 0) {
-                setSelectedUser(convs[0].user);
+            // Autoselección del primer chat solo si no llegó ningún amigo desde FriendsPage
+            if (!openFriend && convs.length > 0) {
+                setSelectedUser(prev => prev ?? convs[0].user);
             }
         } catch (err: any) {
             setError('No se pudieron cargar los mensajes.');
@@ -36,12 +40,12 @@ const MessagesPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [selectedUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         fetchConversations();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchConversations]);
 
     const formatLastMessage = (conv: Conversation) => {
         const maxLen = 42;

@@ -152,7 +152,7 @@ const FriendsPage: React.FC = () => {
                                             <div className="friend-actions">
                                                 <button
                                                     className="btn-message"
-                                                    onClick={(e) => { e.stopPropagation(); navigate(`/messages`); }}
+                                                    onClick={(e) => { e.stopPropagation(); navigate('/messages', { state: { openFriend: friend } }); }}
                                                     title="Chatear"
                                                 >
                                                     💬
