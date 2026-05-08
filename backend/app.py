@@ -1,6 +1,5 @@
 import re
-from flask import request, jsonify
-from flask_cors import CORS
+from flask import request, jsonify, make_response
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -30,13 +29,45 @@ class CookiePolicyMiddleware:
 
 app.wsgi_app = CookiePolicyMiddleware(app.wsgi_app)
 
-# Configuración de CORS - permite el dominio exacto de Vercel + localhost
-CORS(app, supports_credentials=True, origins=[
+# Orígenes permitidos
+ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
     "https://squad-finder-nine.vercel.app",
-    re.compile(r"https://.*\.vercel\.app"),
-], allow_headers=["Content-Type", "Authorization", "X-Requested-With"], methods=["GET","POST","PUT","DELETE","OPTIONS"])
+]
+
+def is_allowed_origin(origin):
+    if not origin:
+        return False
+    if origin in ALLOWED_ORIGINS:
+        return True
+    # Permitir cualquier subdominio de vercel.app
+    if re.match(r"https://.*\.vercel\.app$", origin):
+        return True
+    return False
+
+@app.before_request
+def handle_preflight():
+    if request.method == 'OPTIONS':
+        origin = request.headers.get('Origin', '')
+        if is_allowed_origin(origin):
+            response = app.make_default_options_response()
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+            response.headers['Access-Control-Max-Age'] = '3600'
+            return response
+
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get('Origin', '')
+    if is_allowed_origin(origin):
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+    return response
 
 # Configuración de LoginManager
 login_manager = LoginManager(app)
