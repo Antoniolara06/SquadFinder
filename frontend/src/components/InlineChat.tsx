@@ -6,9 +6,10 @@ import type { User } from '../types';
 
 interface InlineChatProps {
     friend: User;
+    onBack?: () => void;
 }
 
-const InlineChat: React.FC<InlineChatProps> = ({ friend }) => {
+const InlineChat: React.FC<InlineChatProps> = ({ friend, onBack }) => {
     const { user: currentUser } = useAuth();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
@@ -112,6 +113,11 @@ const InlineChat: React.FC<InlineChatProps> = ({ friend }) => {
         <div className="inline-chat">
             {/* Mini header con info del amigo */}
             <div className="inline-chat-header">
+                {onBack && (
+                    <button className="inline-chat-back-btn" onClick={onBack} aria-label="Volver">
+                        ←
+                    </button>
+                )}
                 <div className="chat-avatar-wrap">
                     <img src={friendAvatar} alt={friend.username} className="chat-avatar" />
                 </div>
@@ -200,9 +206,7 @@ const InlineChat: React.FC<InlineChatProps> = ({ friend }) => {
                         {sending ? '⏳' : '➤'}
                     </button>
                 </div>
-                <p className="chat-hint">
-                    Pulsa <kbd>Enter</kbd> para enviar · <kbd>Shift+Enter</kbd> para nueva línea
-                </p>
+
             </div>
         </div>
     );

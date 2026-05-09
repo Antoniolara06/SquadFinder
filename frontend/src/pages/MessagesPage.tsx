@@ -23,6 +23,8 @@ const MessagesPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedUser, setSelectedUser] = useState<User | null>(openFriend ?? null);
+    // En móvil: controla si se muestra el panel de chat o la lista
+    const [chatOpenOnMobile, setChatOpenOnMobile] = useState<boolean>(!!openFriend);
 
     const fetchConversations = useCallback(async () => {
         try {
@@ -90,7 +92,7 @@ const MessagesPage: React.FC = () => {
                         <button className="btn-retry" onClick={fetchConversations}>Reintentar</button>
                     </div>
                 ) : (
-                    <div className="messages-layout">
+                    <div className={`messages-layout${chatOpenOnMobile ? ' chat-open' : ''}`}>
                         {/* Columna izquierda: lista de conversaciones */}
                         <aside className="messages-list-column">
                             <div className="messages-list-header">
@@ -111,7 +113,10 @@ const MessagesPage: React.FC = () => {
                                             <div
                                                 key={conv.user.id}
                                                 className={`conv-row ${isSelected ? 'conv-row--selected' : ''}`}
-                                                onClick={() => setSelectedUser(conv.user)}
+                                                onClick={() => {
+                                                    setSelectedUser(conv.user);
+                                                    setChatOpenOnMobile(true);
+                                                }}
                                             >
                                                 <div className="conv-avatar-wrap">
                                                     <img
@@ -140,7 +145,11 @@ const MessagesPage: React.FC = () => {
                         {/* Columna derecha: chat inline */}
                         <section className="messages-chat-column">
                             {selectedUser ? (
-                                <InlineChat key={selectedUser.id} friend={selectedUser} />
+                                <InlineChat
+                                    key={selectedUser.id}
+                                    friend={selectedUser}
+                                    onBack={() => setChatOpenOnMobile(false)}
+                                />
                             ) : (
                                 <div className="messages-chat-placeholder">
                                     <span className="placeholder-icon">💬</span>

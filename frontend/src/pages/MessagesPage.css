@@ -268,10 +268,31 @@
     font-size: 0.95rem;
 }
 
+/* ─── Botón volver en móvil (dentro de InlineChat) ─── */
+.inline-chat-back-btn {
+    display: none; /* oculto en escritorio */
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.inline-chat-back-btn:hover {
+    background: rgba(139, 92, 246, 0.22);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .messages-layout {
         grid-template-columns: 1fr;
+        height: calc(100vh - 120px);
     }
 
     .messages-chat-column {
@@ -284,5 +305,13 @@
 
     .messages-layout.chat-open .messages-chat-column {
         display: flex;
+        height: 100%;
+    }
+
+    /* Mostrar el botón volver solo en móvil */
+    .inline-chat-back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
