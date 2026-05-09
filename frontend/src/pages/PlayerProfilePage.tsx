@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { playersApi, friendsApi } from '../utils/api';
 import type { User } from '../types';
+import { resolveAvatarUrl } from '../utils/imageUtils';
 import './PlayerProfilePage.css';
 
 const PLATFORM_ICONS: Record<string, string> = {
@@ -82,7 +83,7 @@ const PlayerProfilePage: React.FC = () => {
     const plataformas = parse(user.plataformas);
     const horarios = parse((user as any).horario_juego);
     const usaMic = (user as any).usa_microfono;
-    const avatarUrl = user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=6d28d9&color=fff&size=200`;
+    const avatarUrl = resolveAvatarUrl(user.avatar_url, user.username);
     const flag = FLAG_MAP[user.pais || ''] || '';
 
     return (

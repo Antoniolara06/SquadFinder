@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { chatApi } from '../utils/api';
 import type { User } from '../types';
 import InlineChat from '../components/InlineChat';
-import { getGameImageUrl } from '../utils/imageUtils';
+import { resolveAvatarUrl } from '../utils/imageUtils';
 import './MessagesPage.css';
 
 interface Conversation {
@@ -63,11 +63,6 @@ const MessagesPage: React.FC = () => {
             return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
         }
         return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-    };
-
-    const resolveAvatarUrl = (url?: string) => {
-        if (!url) return undefined;
-        return url.startsWith('/static') ? getGameImageUrl(url) : url;
     };
 
     return (

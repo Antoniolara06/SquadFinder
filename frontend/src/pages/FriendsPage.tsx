@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { friendsApi } from '../utils/api';
 import type { FriendshipData } from '../utils/api';
 import type { User } from '../types';
-import { getGameImageUrl } from '../utils/imageUtils';
+import { resolveAvatarUrl } from '../utils/imageUtils';
 import './FriendsPage.css';
 
 type TabType = 'friends' | 'received' | 'sent';
@@ -56,11 +56,6 @@ const FriendsPage: React.FC = () => {
         } finally {
             setActionLoading(null);
         }
-    };
-
-    const resolveAvatarUrl = (url?: string) => {
-        if (!url) return undefined;
-        return url.startsWith('/static') ? getGameImageUrl(url) : url;
     };
 
     const receivedCount = data?.received_requests?.length ?? 0;

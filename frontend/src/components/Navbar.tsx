@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { resolveAvatarUrl } from '../utils/imageUtils';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
@@ -29,7 +30,7 @@ const Navbar: React.FC = () => {
                         <NavLink to="/messages" onClick={closeMenu}>Mensajes</NavLink>
                         <NavLink to="/edit-profile" className="navbar-user" onClick={closeMenu}>
                             {user.avatar_url && (
-                                <img src={user.avatar_url} alt="User Avatar" className="navbar-avatar" />
+                                <img src={resolveAvatarUrl(user.avatar_url)} alt="User Avatar" className="navbar-avatar" />
                             )}
                             <span>Hola, {user.username}</span>
                         </NavLink>

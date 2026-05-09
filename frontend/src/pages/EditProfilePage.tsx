@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { authApi, gamesApi, anunciosApi } from '../utils/api';
 import type { Game, Anuncio } from '../types';
 import GameSearchSelect from '../components/GameSearchSelect';
-import { getGameImageUrl } from '../utils/imageUtils';
+import { getGameImageUrl, resolveAvatarUrl } from '../utils/imageUtils';
 import './EditProfilePage.css';
 
 
@@ -84,8 +84,7 @@ const EditProfilePage: React.FC = () => {
             usa_microfono: (user as any).usa_microfono ?? false
         });
         if (user.avatar_url) {
-            const resolvedUrl = user.avatar_url.startsWith('/static') ? getGameImageUrl(user.avatar_url) : user.avatar_url;
-            setAvatarPreview(resolvedUrl);
+            setAvatarPreview(resolveAvatarUrl(user.avatar_url, user.username) || '');
         }
     }, [user]);
 
@@ -126,7 +125,7 @@ const EditProfilePage: React.FC = () => {
 
     if (!user) return <div className="ep-loading"><div className="ep-spinner" /></div>;
 
-    const avatarUrl = avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=6d28d9&color=fff&size=200`;
+    const avatarUrl = avatarPreview || resolveAvatarUrl(undefined, user.username);
 
     // Juegos a mostrar como chips: los seleccionados + hasta 10 sugerencias populares
     const selectedGamesList = availableGames.filter(g => formData.juegos.includes(g.nombre));

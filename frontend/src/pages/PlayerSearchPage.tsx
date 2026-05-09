@@ -5,6 +5,7 @@ import { playersApi, friendsApi, configApi } from '../utils/api';
 import type { AppConfig } from '../utils/api';
 import type { User } from '../types';
 import { useAuth } from '../hooks/useAuth';
+import { getGameImageUrl, resolveAvatarUrl } from '../utils/imageUtils';
 import './PlayerSearchPage.css';
 
 const mapUserToPlayer = (user: User): Player => {
@@ -78,7 +79,7 @@ const mapUserToPlayer = (user: User): Player => {
     return {
         id: user.id,
         username: user.username,
-        avatar: user.avatar_url || `https://ui-avatars.com/api/?name=${user.username}&background=random`,
+        avatar: resolveAvatarUrl(user.avatar_url, user.username),
         status: status,
         reputation: 50,
         tags: tags.length > 0 ? tags : ["Unknown"],

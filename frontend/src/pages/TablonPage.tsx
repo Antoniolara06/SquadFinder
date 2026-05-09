@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { anunciosApi, gamesApi, suggestionsApi } from '../utils/api';
 import type { Anuncio, Game } from '../types';
 import GameSearchSelect from '../components/GameSearchSelect';
-import { getGameImageUrl } from '../utils/imageUtils';
+import { getGameImageUrl, resolveAvatarUrl } from '../utils/imageUtils';
 import './TablonPage.css';
 
 
@@ -301,7 +301,7 @@ const TablonPage: React.FC = () => {
                                     <div className="anuncio-footer">
                                         <div className="anuncio-author">
                                             <img
-                                                src={anuncio.user?.avatar_url || `https://ui-avatars.com/api/?name=${anuncio.user?.username || 'User'}`}
+                                                src={resolveAvatarUrl(anuncio.user?.avatar_url) || `https://ui-avatars.com/api/?name=${anuncio.user?.username || 'User'}`}
                                                 alt="Avatar"
                                                 className="anuncio-avatar"
                                             />
