@@ -83,7 +83,10 @@ const EditProfilePage: React.FC = () => {
             fecha_nacimiento: user.fecha_nacimiento || '',
             usa_microfono: (user as any).usa_microfono ?? false
         });
-        if (user.avatar_url) setAvatarPreview(user.avatar_url);
+        if (user.avatar_url) {
+            const resolvedUrl = user.avatar_url.startsWith('/static') ? getGameImageUrl(user.avatar_url) : user.avatar_url;
+            setAvatarPreview(resolvedUrl);
+        }
     }, [user]);
 
     const toggleItem = (field: 'idiomas' | 'juegos' | 'plataformas' | 'horario_juego', value: string) => {

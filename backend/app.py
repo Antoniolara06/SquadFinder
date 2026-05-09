@@ -314,7 +314,7 @@ def update_profile():
             filename = secure_filename(f"user_{user.id}_{file.filename}")
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-            user.avatar_url = f"{request.host_url}static/uploads/{filename}"
+            user.avatar_url = f"/static/uploads/{filename}"
 
         db.session.commit()
         return jsonify(user.to_dict()), 200

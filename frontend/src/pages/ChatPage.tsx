@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { chatApi, friendsApi } from '../utils/api';
 import type { ChatMessage } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getGameImageUrl } from '../utils/imageUtils';
 import './ChatPage.css';
 
 interface FriendInfo {
@@ -136,7 +137,12 @@ const ChatPage: React.FC = () => {
         }
     });
 
-    const friendAvatar = friendInfo?.avatar_url
+    const resolveAvatarUrl = (url?: string) => {
+        if (!url) return undefined;
+        return url.startsWith('/static') ? getGameImageUrl(url) : url;
+    };
+
+    const friendAvatar = resolveAvatarUrl(friendInfo?.avatar_url)
         || `https://ui-avatars.com/api/?name=${friendInfo?.username ?? 'U'}&background=random`;
 
     const statusMap: Record<string, { label: string; cls: string }> = {
@@ -202,7 +208,7 @@ const ChatPage: React.FC = () => {
                                     >
                                         {!isMine && !consecutive && (
                                             <img
-                                                src={msg.sender_avatar || `https://ui-avatars.com/api/?name=${msg.sender_username}&background=random`}
+                                                src={resolveAvatarUrl(msg.sender_avatar) || `https://ui-avatars.com/api/?name=${msg.sender_username}&background=random`}
                                                 alt={msg.sender_username ?? ''}
                                                 className="bubble-avatar"
                                             />
