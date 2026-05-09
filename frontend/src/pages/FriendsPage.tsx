@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { friendsApi } from '../utils/api';
 import type { FriendshipData } from '../utils/api';
 import type { User } from '../types';
+import { getGameImageUrl } from '../utils/imageUtils';
 import './FriendsPage.css';
 
 type TabType = 'friends' | 'received' | 'sent';
@@ -57,6 +58,10 @@ const FriendsPage: React.FC = () => {
         }
     };
 
+    const resolveAvatarUrl = (url?: string) => {
+        if (!url) return undefined;
+        return url.startsWith('/static') ? getGameImageUrl(url) : url;
+    };
 
     const receivedCount = data?.received_requests?.length ?? 0;
     const sentCount = data?.sent_requests?.length ?? 0;
@@ -140,7 +145,7 @@ const FriendsPage: React.FC = () => {
                                         <div key={friend.id} className="friend-card" onClick={() => navigate(`/players/${friend.id}`)} style={{ cursor: 'pointer' }}>
                                             <div className="friend-avatar-wrap">
                                                 <img
-                                                    src={friend.avatar_url || `https://ui-avatars.com/api/?name=${friend.username}&background=random`}
+                                                    src={resolveAvatarUrl(friend.avatar_url) || `https://ui-avatars.com/api/?name=${friend.username}&background=random`}
                                                     alt={friend.username}
                                                     className="friend-avatar"
                                                 />
@@ -189,7 +194,7 @@ const FriendsPage: React.FC = () => {
                                                 onClick={() => navigate(`/players/${req.sender?.id}`)}
                                             >
                                                 <img
-                                                    src={req.sender?.avatar_url || `https://ui-avatars.com/api/?name=${req.sender?.username ?? 'U'}&background=random`}
+                                                    src={resolveAvatarUrl(req.sender?.avatar_url) || `https://ui-avatars.com/api/?name=${req.sender?.username ?? 'U'}&background=random`}
                                                     alt={req.sender?.username}
                                                     className="friend-avatar"
                                                 />
@@ -248,7 +253,7 @@ const FriendsPage: React.FC = () => {
                                                 onClick={() => navigate(`/players/${req.receiver?.id}`)}
                                             >
                                                 <img
-                                                    src={req.receiver?.avatar_url || `https://ui-avatars.com/api/?name=${req.receiver?.username ?? 'U'}&background=random`}
+                                                    src={resolveAvatarUrl(req.receiver?.avatar_url) || `https://ui-avatars.com/api/?name=${req.receiver?.username ?? 'U'}&background=random`}
                                                     alt={req.receiver?.username}
                                                     className="friend-avatar"
                                                 />

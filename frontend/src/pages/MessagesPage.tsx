@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { chatApi } from '../utils/api';
 import type { User } from '../types';
 import InlineChat from '../components/InlineChat';
+import { getGameImageUrl } from '../utils/imageUtils';
 import './MessagesPage.css';
 
 interface Conversation {
@@ -64,6 +65,11 @@ const MessagesPage: React.FC = () => {
         return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
     };
 
+    const resolveAvatarUrl = (url?: string) => {
+        if (!url) return undefined;
+        return url.startsWith('/static') ? getGameImageUrl(url) : url;
+    };
+
     return (
         <div className="messages-page">
             {/* Header */}
@@ -120,7 +126,7 @@ const MessagesPage: React.FC = () => {
                                             >
                                                 <div className="conv-avatar-wrap">
                                                     <img
-                                                        src={conv.user.avatar_url || `https://ui-avatars.com/api/?name=${conv.user.username}&background=random`}
+                                                        src={resolveAvatarUrl(conv.user.avatar_url) || `https://ui-avatars.com/api/?name=${conv.user.username}&background=random`}
                                                         alt={conv.user.username}
                                                         className="conv-avatar"
                                                     />
