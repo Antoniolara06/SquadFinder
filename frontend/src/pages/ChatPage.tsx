@@ -79,11 +79,6 @@ const ChatPage: React.FC = () => {
         };
     }, [fetchMessages]);
 
-    // Scroll automático al último mensaje
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
-
     const handleSend = async () => {
         const text = input.trim();
         if (!text || sending) return;

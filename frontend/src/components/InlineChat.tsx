@@ -49,9 +49,11 @@ const InlineChat: React.FC<InlineChatProps> = ({ friend, onBack }) => {
         };
     }, [fetchMessages]);
 
+    /*
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+    */
 
     const handleSend = async () => {
         const text = input.trim();

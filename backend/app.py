@@ -230,12 +230,12 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/me', methods=['GET'])
+@app.route('/edit-profile', methods=['GET'])
 @token_required
 def get_current_user():
     return jsonify(g.current_user.to_dict()), 200
 
-@app.route('/me/update', methods=['PUT'])
+@app.route('/edit-profile/update', methods=['PUT'])
 @token_required
 def update_profile():
     user = g.current_user
@@ -362,6 +362,13 @@ def get_players():
     players = Usuario.query.all()
     return jsonify([p.to_dict() for p in players]), 200
 
+@app.route('/anuncios/<int:anuncio_id>', methods=['GET'])
+def get_anuncio_by_id(anuncio_id):
+    anuncio = Anuncio.query.get(anuncio_id)
+    if not anuncio:
+        return jsonify({'error': 'Anuncio no encontrado'}), 404
+    return jsonify(anuncio.to_dict()), 200
+
 @app.route('/anuncios', methods=['POST'])
 @token_required
 def create_anuncio():
@@ -397,7 +404,7 @@ def delete_anuncio(anuncio_id):
     db.session.commit()
     return jsonify({'message': 'Anuncio eliminado correctamente'}), 200
 
-@app.route('/me/anuncios', methods=['GET'])
+@app.route('/edit-profile/anuncios', methods=['GET'])
 @token_required
 def get_my_anuncios():
     user = g.current_user

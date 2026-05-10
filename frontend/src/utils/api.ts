@@ -44,14 +44,14 @@ export const authApi = {
         await api.post('/register', userData);
     },
     getCurrentUser: async (): Promise<User> => {
-        const { data } = await api.get('/me');
+        const { data } = await api.get('/edit-profile');
         return data;
     },
     updateProfile: async (userData: Partial<User> | FormData): Promise<User> => {
         const config = userData instanceof FormData
             ? { headers: { 'Content-Type': undefined } }
             : {};
-        const { data } = await api.put('/me/update', userData, config);
+        const { data } = await api.put('/edit-profile/update', userData, config);
         return data;
     },
     logout: () => {
@@ -78,7 +78,7 @@ export const anunciosApi = {
         await api.delete(`/anuncios/${id}`);
     },
     getMine: async (): Promise<Anuncio[]> => {
-        const { data } = await api.get('/me/anuncios');
+        const { data } = await api.get('/edit-profile/anuncios');
         return data;
     }
 };
