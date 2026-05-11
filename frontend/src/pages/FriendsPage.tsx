@@ -155,8 +155,8 @@ const FriendsPage: React.FC = () => {
                                                     className="friend-avatar"
                                                 />
                                             </div>
-                                            <div className="friend-info" style={{ flex: 1 }}>
-                                                <h3 className="friend-name" style={{ margin: '0 0 4px', fontSize: '1.1rem' }}>{friend.username}</h3>
+                                            <div className="friend-info">
+                                                <h3 className="friend-name">{friend.username}</h3>
                                                 <span className="badge-friend">Amigo</span>
                                             </div>
                                             <div className="friend-actions">
