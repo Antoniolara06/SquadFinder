@@ -503,6 +503,22 @@ def reject_friend_request(request_id):
     db.session.commit()
     return jsonify({'message': 'Friend request rejected'}), 200
 
+@app.route('/friends/<int:friend_id>', methods=['DELETE'])
+@token_required
+def remove_friend(friend_id):
+    user = g.current_user
+    friendship = Friendship.query.filter(
+        ((Friendship.user_id == user.id) & (Friendship.friend_id == friend_id)) |
+        ((Friendship.user_id == friend_id) & (Friendship.friend_id == user.id))
+    ).first()
+
+    if not friendship:
+        return jsonify({'error': 'Friendship not found'}), 404
+
+    db.session.delete(friendship)
+    db.session.commit()
+    return jsonify({'message': 'Friendship removed successfully'}), 200
+
 # ─── Rutas de Chat ─────────────────────────────────────────────────────────────
 
 @app.route('/chat/conversations', methods=['GET'])

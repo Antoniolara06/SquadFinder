@@ -146,6 +146,10 @@ export const friendsApi = {
     rejectRequest: async (requestId: number) => {
         const { data } = await api.post(`/friends/reject/${requestId}`);
         return data;
+    },
+    removeFriend: async (friendId: number) => {
+        const { data } = await api.delete(`/friends/${friendId}`);
+        return data;
     }
 };
 

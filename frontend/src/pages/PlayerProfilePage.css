@@ -155,6 +155,32 @@
     transform: none;
 }
 
+.pp-friendship-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.pp-btn-remove-friend {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: .92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.pp-btn-remove-friend:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, .3);
+    transform: translateY(-2px);
+}
+
 .pp-btn-back {
     background: transparent;
     border: 1px solid #4b5563;

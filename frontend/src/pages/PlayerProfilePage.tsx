@@ -63,6 +63,17 @@ const PlayerProfilePage: React.FC = () => {
             setFriendStatus('pending_sent');
         } catch { }
     };
+    
+    const handleRemoveFriend = async () => {
+        if (!user) return;
+        if (!window.confirm(`¿Estás seguro de que quieres eliminar a ${user.username} de tus amigos?`)) return;
+        try {
+            await friendsApi.removeFriend(user.id);
+            setFriendStatus('none');
+        } catch (error) {
+            console.error("Error al eliminar amigo:", error);
+        }
+    };
 
     if (loading) return (
         <div className="loading-container">
@@ -109,16 +120,28 @@ const PlayerProfilePage: React.FC = () => {
                     </div>
                 </div>
                 <div className="pp-hero-actions">
-                    <button
-                        className={`pp-btn-friend ${friendStatus !== 'none' ? 'sent' : ''}`}
-                        onClick={handleAddFriend}
-                        disabled={friendStatus !== 'none'}
-                    >
-                        {friendStatus === 'pending_sent' ? '✓ Solicitud enviada' :
-                            friendStatus === 'accepted' ? 'Amigos' :
-                                friendStatus === 'pending_received' ? 'Responder Solicitud' :
-                                    '+ Añadir Amigo'}
-                    </button>
+                    <div className="pp-friendship-group">
+                        <button
+                            className={`pp-btn-friend ${friendStatus !== 'none' ? 'sent' : ''}`}
+                            onClick={handleAddFriend}
+                            disabled={friendStatus !== 'none'}
+                        >
+                            {friendStatus === 'pending_sent' ? '✓ Solicitud enviada' :
+                                friendStatus === 'accepted' ? 'Amigos' :
+                                    friendStatus === 'pending_received' ? 'Responder Solicitud' :
+                                        '+ Añadir Amigo'}
+                        </button>
+
+                        {friendStatus === 'accepted' && (
+                            <button
+                                className="pp-btn-remove-friend"
+                                onClick={handleRemoveFriend}
+                                title="Eliminar amigo"
+                            >
+                                Eliminar amigo
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 

@@ -58,6 +58,16 @@ const FriendsPage: React.FC = () => {
         }
     };
 
+    const handleRemove = async (friendId: number, friendName: string) => {
+        if (!window.confirm(`¿Estás seguro de que quieres eliminar a ${friendName} de tus amigos?`)) return;
+        try {
+            await friendsApi.removeFriend(friendId);
+            await fetchAll();
+        } catch (err) {
+            console.error('Error eliminando amigo', err);
+        }
+    };
+
     const receivedCount = data?.received_requests?.length ?? 0;
     const sentCount = data?.sent_requests?.length ?? 0;
     const friendsCount = data?.friends?.length ?? 0;
@@ -163,6 +173,13 @@ const FriendsPage: React.FC = () => {
                                                     title="Ver perfil"
                                                 >
                                                     👤
+                                                </button>
+                                                <button
+                                                    className="btn-remove-friend"
+                                                    onClick={(e) => { e.stopPropagation(); handleRemove(friend.id, friend.username); }}
+                                                    title="Eliminar amigo"
+                                                >
+                                                    🗑️
                                                 </button>
                                             </div>
                                         </div>
