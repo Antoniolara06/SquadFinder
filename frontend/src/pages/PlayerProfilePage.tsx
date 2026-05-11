@@ -65,14 +65,14 @@ const PlayerProfilePage: React.FC = () => {
     };
 
     if (loading) return (
-        <div className="pp-loading">
-            <div className="pp-spinner" />
+        <div className="loading-container">
+            <div className="spinner" />
             <p>Cargando perfil...</p>
         </div>
     );
 
     if (!user) return (
-        <div className="pp-loading">
+        <div className="loading-container">
             <p>Jugador no encontrado.</p>
             <button onClick={() => navigate('/players')} className="pp-btn-back">← Volver</button>
         </div>

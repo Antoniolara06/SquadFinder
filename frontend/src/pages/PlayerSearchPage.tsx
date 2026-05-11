@@ -182,7 +182,12 @@ const PlayerSearchPage: React.FC = () => {
     };
 
     if (loading) {
-        return <div className="loading-container">Cargando jugadores...</div>;
+        return (
+            <div className="loading-container">
+                <div className="spinner"></div>
+                <p>Buscando jugadores...</p>
+            </div>
+        );
     }
 
 

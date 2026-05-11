@@ -162,7 +162,7 @@ const TablonPage: React.FC = () => {
         ? anuncios.filter(s => s.game?.nombre === filterGame)
         : anuncios;
 
-    if (loading) return <div className="tablon-loading"><div className="spinner"></div></div>;
+    if (loading) return <div className="loading-container"><div className="spinner"></div><p>Cargando anuncios...</p></div>;
 
     return (
         <div className="tablon-container">

@@ -6,7 +6,12 @@ const ProtectedRoute = () => {
     const { user, loading } = useAuth();
 
     if (loading) {
-        return <div>Cargando autenticación...</div>;
+        return (
+            <div className="loading-container">
+                <div className="spinner"></div>
+                <p>Verificando sesión...</p>
+            </div>
+        );
     }
 
     if (!user) {
